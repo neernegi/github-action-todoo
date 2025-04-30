@@ -4,16 +4,17 @@ import TodoForm from "./components/TodoForm";
 
 const App = () => {
   const [todos, setTodos] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch todos
   useEffect(() => {
-    fetch("http://localhost:5000/api/todos")
+    fetch(`${API_URL}/api/todos`)
       .then(res => res.json())
       .then(data => setTodos(data));
-  }, []);
+  }, [API_URL]);
 
   const addTodo = async (text) => {
-    const res = await fetch("http://localhost:5000/api/todos", {
+    const res = await fetch(`${API_URL}/api/todos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text })
@@ -23,7 +24,7 @@ const App = () => {
   };
 
   const toggleComplete = async (id, completed) => {
-    const res = await fetch(`http://localhost:5000/api/todos/${id}`, {
+    const res = await fetch(`${API_URL}/api/todos/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ completed })
@@ -33,7 +34,7 @@ const App = () => {
   };
 
   const deleteTodo = async (id) => {
-    await fetch(`http://localhost:5000/api/todos/${id}`, {
+    await fetch(`${API_URL}/api/todos/${id}`, {
       method: "DELETE"
     });
     setTodos(todos.filter(todo => todo._id !== id));

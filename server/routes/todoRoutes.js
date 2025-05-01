@@ -6,7 +6,7 @@ const router = express.Router();
 // Get all todos
 router.get("/", async (req, res, next) => {
     try {
-        const todos = await Todo.find;
+        const todos = await Todo.find();
         res.json(todos);
     } catch (err) {
         next(err);

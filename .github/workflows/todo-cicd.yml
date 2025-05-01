@@ -1,0 +1,109 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm ci
+      
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm ci
+      
+      - name: Run frontend linting
+        run: |
+          cd client
+          npm run lint
+  
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Prepare backend
+        run: |
+          cd server
+          npm ci
+          # Create .env.production file if needed
+          # echo "NODE_ENV=production" > .env.production
+      
+      - name: Build frontend
+        run: |
+          cd client
+          npm ci
+          npm run build
+      
+      - name: Archive backend
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-files
+          path: server/
+          retention-days: 3
+          
+      - name: Archive frontend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: client/dist
+          retention-days: 3
+  
+  deploy:
+    name: Deploy to Render
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Download backend files
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-files
+          path: server/
+      
+      - name: Download frontend files
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: client/dist
+      
+      - name: Deploy to Render
+        uses: JorgeLNJunior/render-deploy@v1.4.3
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}

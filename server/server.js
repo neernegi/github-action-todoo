@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-
 import todoRoutes from "./routes/todoRoutes.js";
 
 dotenv.config();
@@ -27,4 +26,13 @@ mongoose.connect(process.env.MONGO_URL)
     console.log("MongoDB connected");
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});

@@ -64,19 +64,19 @@ jobs:
           npm ci
           npm run build
       
-      - name: Archive backend
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-files
-          path: server/
-          retention-days: 3
+    #   - name: Archive backend
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: backend-files
+    #       path: server/
+    #       retention-days: 3
           
-      - name: Archive frontend build
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: client/dist
-          retention-days: 3
+    #   - name: Archive frontend build
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: frontend-build
+    #       path: client/dist
+    #       retention-days: 3
   
   deploy:
     name: Deploy to Render

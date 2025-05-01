@@ -88,17 +88,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Download backend files
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-files
-          path: server/
+    #   - name: Download backend files
+    #     uses: actions/download-artifact@v4
+    #     with:
+    #       name: backend-files
+    #       path: server/
       
-      - name: Download frontend files
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: client/dist
+    #   - name: Download frontend files
+    #     uses: actions/download-artifact@v4
+    #     with:
+    #       name: frontend-build
+    #       path: client/dist
       
       - name: Deploy to Render
         uses: JorgeLNJunior/render-deploy@v1.4.3

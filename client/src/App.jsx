@@ -43,7 +43,7 @@ const App = () => {
   return (
     <div className="container">
       <h1>📝 My TODO List</h1>
-      <TodoForm addTodo={addTodo}
+      <TodoForm addTodo={addTodo} />
       <TodoList todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo} />
     </div>
   );

@@ -25,8 +25,8 @@ const App = () => {
 
   const toggleComplete = async (id, completed) => {
     const res = await fetch(`${API_URL}/api/todos/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: "PUT"
+      headers: { "Content-Type": "application/json" }
       body: JSON.stringify({ completed })
     });
     const updatedTodo = await res.json();

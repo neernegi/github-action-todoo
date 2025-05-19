@@ -109,7 +109,7 @@ jobs:
         
   deploy:
     name: Deploy to Render
-    needs: build
+    needs: deploy-docker
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
